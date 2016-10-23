@@ -1,0 +1,42 @@
+
+2016-04-02 02:54:18.918  INFO sqltiming: CREATE EXTERNAL TABLE part ( p_partkey INT, p_name STRING, p_mfgr STRING, p_category STRING, 
+p_brand1 STRING, p_color STRING, p_type STRING, p_size INT, p_container STRING) ROW FORMAT 
+DELIMITED FIELDS TERMINATED BY '|' LOCATION 's3://cmucc-public/p35/ssbgz/part/' 
+ {executed in 7723 msec}
+2016-04-02 02:54:19.254  INFO sqltiming: CREATE EXTERNAL TABLE supplier ( s_suppkey INT, s_name STRING, s_address STRING, s_city STRING, 
+s_nation STRING, s_region STRING, s_phone STRING) ROW FORMAT DELIMITED FIELDS TERMINATED BY 
+'|' LOCATION 's3://cmucc-public/p35/ssbgz/supplier/' 
+ {executed in 334 msec}
+2016-04-02 02:54:19.763  INFO sqltiming: CREATE EXTERNAL TABLE customer( c_custkey INT, c_name STRING, c_address STRING, c_city STRING, 
+c_nation STRING, c_region STRING, c_phone STRING, c_mktsegment STRING) ROW FORMAT DELIMITED 
+FIELDS TERMINATED BY '|' LOCATION 's3://cmucc-public/p35/ssbgz/customer/' 
+ {executed in 508 msec}
+2016-04-02 02:54:20.163  INFO sqltiming: CREATE EXTERNAL TABLE dwdate( d_datekey INT, d_date STRING, d_dayofweek STRING, d_month STRING, 
+d_year INT, d_yearmonthnum INT, d_yearmonth STRING, d_daynuminweek INT, d_daynuminmonth INT, 
+d_daynuminyear INT, d_monthnuminyear INT, d_weeknuminyear INT, d_sellingseason STRING, d_lastdayinweekfl 
+STRING, d_lastdayinmonthfl STRING, d_holidayfl STRING, d_weekdayfl STRING) ROW FORMAT DELIMITED 
+FIELDS TERMINATED BY '|' LOCATION 's3://cmucc-public/p35/ssbgz/dwdate/' 
+ {executed in 398 msec}
+2016-04-02 02:54:20.496  INFO sqltiming: CREATE EXTERNAL TABLE lineorder( lo_orderkey INT, lo_linenumber INT, lo_custkey INT, lo_partkey 
+INT, lo_suppkey INT, lo_orderdate INT, lo_orderpriority STRING, lo_shippriority STRING, lo_quantity 
+INT, lo_extendedprice INT, lo_ordertotalprice INT, lo_discount INT, lo_revenue INT, lo_supplycost 
+INT, lo_tax INT, lo_commitdate INT, lo_shipmode STRING) ROW FORMAT DELIMITED FIELDS TERMINATED 
+BY '|' LOCATION 's3://cmucc-public/p35/ssbgz/lineorder/' 
+ {executed in 328 msec}
+2016-04-02 03:06:43.415  INFO sqltiming: select sum(lo_extendedprice*lo_discount) as revenue from lineorder, dwdate where lo_orderdate=d_datekey 
+and d_year=1997 and lo_discount between 1 and 3 and lo_quantity < 24 
+ {executed in 505010 msec}
+2016-04-02 03:36:56.085  INFO sqltiming: select sum(lo_revenue), d_year, p_brand1 from lineorder, dwdate, part, supplier where lo_orderdate 
+= d_datekey and lo_partkey = p_partkey and lo_suppkey = s_suppkey and p_category = 'MFGR#12' 
+and s_region = 'AMERICA' group by d_year, p_brand1 order by d_year, p_brand1 limit 500 
+ {executed in 1806697 msec}
+2016-04-02 03:45:47.864  INFO sqltiming: drop table part 
+ {executed in 1127 msec}
+2016-04-02 03:45:48.217  INFO sqltiming: drop table supplier 
+ {executed in 352 msec}
+2016-04-02 03:45:48.525  INFO sqltiming: drop table customer 
+ {executed in 307 msec}
+2016-04-02 03:45:48.825  INFO sqltiming: drop table dwdate 
+ {executed in 300 msec}
+2016-04-02 03:45:49.149  INFO sqltiming: drop table lineorder 
+ {executed in 323 msec}
